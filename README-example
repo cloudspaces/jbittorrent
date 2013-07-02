@@ -1,0 +1,113 @@
+QUICK EXAMPLE TO TEST JBITTORRENT.
+-----------------------------------------------------------------
+
+This is an example to test the jbittorrent.
+
+You may run this test using 4 computers connected through Internet,
+or you may run this test using only one computer.
+
+This is the set-up that we will use in this example.
+
+Computer   Task
+Tracker    The tracker used to publish the bit torrent files 
+Client1    A client that is sharing a file
+Client2    A client that wishes to download that file
+Client3    A client that wishes to download that file also, simultaneously
+
+
+
+CLASSPATH=jbittorrentapi.jar:ext/log4j-1.2.17.jar:ext/java-cloudfiles.jar:ext/java-cloudfiles.jar:ext/httpcore-4.1.jar:ext/httpclient-4.1.1.jar:ext/gson-2.2.2.jar:ext/gson-2.2.2-sources.jar:ext/gson-2.2.2-javadoc.jar:ext/commons-logging-1.1.jar:ext/commons-logging-1.1.jar:ext/commons-io-2.0.1.jar:ext/commons-httpclient-3.0.1.jar:ext/commons-codec-1.3.jar:ext/ant.jar:ext/freemarker.jar:ext/groovy.jar:ext/jaxen-core.jar:ext/jaxen-jdom.jar:ext/jdom.jar:ext/kxml.jar:ext/saxpath.jar:ext/simple-upload-0.3.4.jar:ext/velocity.jar:extxalan.jar:ext/xerces.jar:ext/xml-apis.jar
+
+
+In the example, we will assume that you run the four programs in the same computer.
+If that is not the case, you only need to substitute "localhost" by the IP of the computer running the tracker.
+
+#### THE TRACKER
+
+1. Download jbittorrent
+2. Go to the console
+3. Compile with buildTrackerBT.bat for MS Windows systems or buildTrackerBT.sh for UNIX systems.
+4. Set the CLASSPARTH
+   . ./env.sh (or execute env.bat if using MS Windows)
+5. Start the tracker
+   java trackerBT.Tracker example_tracker_config.xml     # It reads example_tracker_config.xml, change it according to your needs. By default, tracker listens on port 8081
+   or java -classpath  build;ext\log4j-1.2.17.jar;ext/java-cloudfiles.jar;ext/java-cloudfiles.jar;ext/httpcore-4.1.jar;ext/httpclient-4.1.1.jar;ext/gson-2.2.2.jar;ext/gson-2.2.2-sources.jar;ext/gson-2.2.2-javadoc.jar;ext/commons-logging-1.1.jar;ext/commons-logging-1.1.jar;ext/commons-io-2.0.1.jar;ext/commons-httpclient-3.0.1.jar;ext/commons-codec-1.3.jar;ext/ant.jar;ext/freemarker.jar;ext/groovy.jar;ext/jaxen-core.jar;ext/jaxen-jdom.jar;ext/jdom.jar:ext/kxml.jar;ext/saxpath.jar;ext/simple-upload-0.3.4.jar;ext/velocity.jar:extxalan.jar;ext/xerces.jar;ext/xml-apis.jar trackerBT.Tracker example_tracker_config.xml
+   or java -jar trackerBT.jar example_tracker_config.xml
+   
+#### CLIENT1
+
+1. Download jbittorrent
+2. Go to the console
+3. Compile with build.bat for MS Windows systems or build.sh for UNIX systems. 
+   Or execute the command ant if you use apache ant tool. Edit buil.xml (for ExampleCreateTorrent or ExampleDownloadFiles)
+4. Set the CLASSPARTH
+   . ./env.sh (or execute env.bat if using MS Windows)
+
+5. We will share the file example/client1/funvideo05.wmv (only 3.8Mb long)
+   Otherwise, copy the file that you want to share into example/client1/funvideo.wmv
+   (for instance, take a file 100Mb or 1Gb long)
+
+6. Create a torrent file (description of the file(s) you want to share)
+   java test.ExampleCreateTorrent example/client1/funvideo.torrent http://localhost:8081/announce 256 example/client1/funvideo05.wmv .. "John Lynch" .. "this is a fun video"
+   or java -classpath build;ext\log4j-1.2.17.jar test.ExampleCreateTorrent example/client1/funvideo.torrent http://localhost:8081/announce 256 example/client1/funvideo05.wmv .. "John Lynch" .. "this is a fun video"
+   or java -jar jbittorrent.jar example/client1/funvideo.torrent http://localhost:8081/announce 256 example/client1/funvideo05.wmv .. "John Lynch" .. "this is a fun video"
+   
+   result:
+   Hashing the files...
+   Hash complete... Saving...
+   Torrent created successfully!!!
+
+7. Publish the torrent file to the tracker
+   java test.ExamplePublish example/client1/funvideo.torrent http://localhost:8081/upload none none "this is a fun video"
+   or java -classpath build;ext\log4j-1.2.17.jar test.ExamplePublish example/client1/funvideo.torrent http://localhost:8081/upload none none "this is a fun video"
+   or java -jar jbittorrent.jar example/client1/funvideo.torrent http://localhost:8081/upload none none "this is a fun video"
+   
+8. Start sharing the file (funvideo05.wmv)
+   java test.ExampleDownloadFiles example/client1/funvideo.torrent example/client1/
+   or java -classpath build;ext\log4j-1.2.17.jar test.ExampleDownloadFiles example/client1/funvideo.torrent example/client1/
+   or java -jar jbittorrent.jar example/client1/funvideo.torrent example/client1/
+   
+9. Imagine you send the torrent file (example/client1/funvideo.torrent) to two friends by email, which will execute client2 and client3.
+
+
+#### CLIENT2
+
+1. Download jbittorrent
+2. Go to the console
+3. Compile with build.bat for MS Windows systems or build.sh for UNIX systems. 
+   Or execute the command ant if you use apache ant tool. Edit buil.xml (for ExampleDownloadFiles)
+4. Set the CLASSPARTH
+   . ./env.sh (or execute env.bat if using MS Windows)
+
+5. Put the torrent file that you received by email (funvideo.torrent) to example/client2/funvideo.torrent
+
+6. Download the file (funvideo05.wmw) using the bit torrent network
+   java test.ExampleDownloadFiles example/client2/funvideo.torrent example/client2/
+   or java -classpath build;ext\log4j-1.2.17.jar test.ExampleDownloadFiles example/client2/funvideo.torrent example/client2/
+   or java -jar jbittorrent.jar test.ExampleDownloadFiles example/client2/funvideo.torrent example/client2/
+   
+   result: after some time, you have downloaded example/client2/funvideo05.wmv
+
+
+
+#### CLIENT3. Execute this at the same time as client 2.
+
+1. Download jbittorrent
+2. Go to the console
+3. Compile with build.bat for MS Windows systems or build.sh for UNIX systems. 
+   Or execute the command ant if you use apache ant tool. Edit buil.xml (for ExampleDownloadFiles)
+4. Set the CLASSPARTH
+   . ./env.sh (or execute env.bat if using MS Windows)
+
+5. Put the torrent file that you received by email (funvideo.torrent) to example/client2/funvideo.torrent
+
+6. Download the file (funvideo05.wmw) using the bit torrent network
+   java test.ExampleDownloadFiles example/client3/funvideo.torrent example/client3/
+   or java -classpath build;ext\log4j-1.2.17.jar test.ExampleDownloadFiles example/client3/funvideo.torrent example/client3/
+   or java -jar jbittorrent.jar test.ExampleDownloadFiles example/client3/funvideo.torrent example/client3/
+   
+   result: after some time, you have downloaded example/client3/funvideo05.wmv
+
+
+
+------------------------------

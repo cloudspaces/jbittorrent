@@ -1,0 +1,81 @@
+***********************
+* Java Bittorrent API *
+***********************
+
+Author: Baptiste Dubuis
+
+Version: 1.0
+
+Package: trackerBT
+
+Description:
+
+   This package aims at providing users a simple and easy-to-use Bittorrent tracker 
+   that can be easily configurable and usable.
+
+   The trackerBT tracker is a stand-alone tracker, in the sense that it does not 
+   require the previous installation of a web server, database or other program. 
+   It relies on Simple Web server (http://www.simpleframework.org), a web server 
+   API that permit to serve files as much as creating new services. Therefore it 
+   reuses some libraries necessary to Simple Web to work.
+
+   The trackerBT tracker does not need any database to be installed. It only uses 
+   XML files to store information about the torrents it is owning and the peers that 
+   are sharing. This has require the use of the jdom library, a library for 
+   reading, processing and creating XML files.
+
+   All these external libraries can be found in the ext directory, and must specified 
+   at compiling or running time.
+
+
+Installation:
+   
+   - From the src directory, compile the files. It is 
+     necessary to include the necessary library using the -cp or -classpath option.
+     To avoid using the -cp [jarFiles;] option, you can set it by
+     For example if user unpack trackerBT and lib in the same directory, from a 
+     console using the command (you can simply copy/paste the following line):
+
+        javac -cp ext/ant.jar;ext/freemarker.jar;ext/groovy.jar;ext/jaxen-core.jar;ext/jaxen-jdom.jar;ext/jdom.jar;ext/kxml.jar;ext/saxpath.jar;ext/simple-upload-0.3.4.jar;ext/velocity.jar;ext/xalan.jar;ext/xerces.jar;ext/xml-apis.jar trackerBT/*.java
+
+   - To run trackerBT, a configuration file is needed. An example of such a file is 
+     provided in the 'config.xml'. Feel free to change parameters in it according to 
+     your needs.
+        - 'config.xml' contains several information for the tracker to run properly.
+          The existing is the default configuration and can be modified to match 
+          user requirement. The parameters are:
+             - context: the root of the tracker, where all files will be searched for
+                        Either relative or absolute path, it must end with a "/"
+             - peerXML: the path and file that will be used to store information 
+                           about the peers sharing torrents owned by this tracker
+             - torrentXML: the path and file that will be used to store information 
+                           about the torrents owned by this tracker
+             - torrentsDir: the directory where all torrents owned by this tracker 
+                            will be saved into
+             - servername: the name that will be assigned to this tracker in http 
+                           request
+             - listeningPort: the port number this tracker will be listening on
+
+Note: Running the tracker create a 'Mapper.xml' file in the context root of the 
+      tracker. This files contains mapping of the tracker URL to several services.
+      It must not be removed since it is needed by Simple Web to work properly. For 
+      information, here are explained the parameter in it:
+          In the 'lookup' section, no change should be made if user did not create 
+          new services since it maps each service name to the corresponding 
+          JAVA class.
+          In the 'resolve' section, user can map specific URL to a given service by 
+          specifying the URL form (in the parameter 'path') and the corresponding 
+          service name (described in the lookup section).
+          By default, the tracker listens for:
+             - torrents upload on the URL of the form "host:listeningport/upload"
+             - peers list request on the URL of the form "host:listeningport/announce
+             - any other URL form are considered a file request and the tracker try 
+               to find and serve the corresponding file (for example torrent files)
+
+Execution:
+
+   Simply run the program from the installation directory specifying the 
+   classpath. For example with the following command and if the ext and trackerBT 
+   directory are in the same directory:
+
+      java -cp ext/ant.jar;ext/freemarker.jar;ext/groovy.jar;ext/jaxen-core.jar;ext/jaxen-jdom.jar;ext/jdom.jar;ext/kxml.jar;ext/saxpath.jar;ext/simple-upload-0.3.4.jar;ext/velocity.jar;ext/xalan.jar;ext/xerces.jar;ext/xml-apis.jar;. trackerBT.Tracker

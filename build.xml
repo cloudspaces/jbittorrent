@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- build Created by Sandra Ferrer Celma on 2013-06-19. Copyright (C) 2013 AST Research Group -->
+<project name="jbittorrent" basedir="." default="ExampleDownloadFiles">
+	
+	<property name="source" value="src"/>
+	<property name="destination" value="build"/>
+	<property name="dist" value="dist"/>
+	
+	<path id="path.libs">
+		<pathelement location="."/>
+		<fileset dir="ext">
+			<include name="**/*.jar"/>
+		</fileset>
+	</path>
+	
+	<target name="clean">
+		<echo message="----------------CLEAN-----------------"/>
+	   	<delete dir="${destination}"/>
+	   	<delete dir="${dist}"/>	
+	</target>
+	
+	<target name="init" depends="clean">
+	   <tstamp/>
+		<echo message="----------------INIT MKDIR-----------------"/>
+	   	<mkdir dir="${destination}"/>
+		<mkdir dir="${dist}"/>
+	 </target>
+	
+	<target name="compile" depends="init">
+		
+		<copy todir="${destination}">
+			<fileset dir="${source}" includes="*.properties"/>
+		</copy>
+		
+		<echo message="----------------COMPILE-----------------"/>
+		<javac destdir="${destination}" srcdir="${source}" excludes="trackerBT/*">
+			<classpath refid="path.libs"/>
+		</javac>
+		
+	</target>
+	
+	<target name="allcompile" depends="init">
+		
+		<copy todir="${destination}">
+			<fileset dir="${source}" includes="*.properties"/>
+		</copy>
+		
+		<echo message="----------------COMPILE-----------------"/>
+		<javac destdir="${destination}" srcdir="${source}" excludes="trackerBT/*">
+			<classpath refid="path.libs"/>
+		</javac>
+		
+	</target>
+	
+	
+	<target name="runExampleDownloadFiles" depends="compile">
+		<echo message="----------------RUN EXAMPLE DOWNLOAD FILES-----------------"/>
+		<java classname="test.ExampleDownloadFiles" classpath="${destination}">
+			<arg value="./example/client3/TheWalkingDead.torrent"/>
+			<arg value="./example/client3/"/>
+			<classpath refid="path.libs"/>
+		</java>
+	</target>
+	
+	<target name="ExampleDownloadFiles" depends="compile">
+		<echo message="----------------GENERATION DE JAR-----------------"/>
+		<jar basedir="${destination}" includes="**" destfile="${dist}/jbittorrent.jar">
+			<manifest>
+				<attribute name="Built-By" value="${user.name}"/>
+				<attribute name="Main-Class" value="test.ExampleDownloadFiles"/>
+				<section name="common">
+					<attribute name="Specification-Title" value="ExampleDownloadFilesAnt"/>
+					<attribute name="Specification-Version" value="1.0"/>
+					<attribute name="Implementation-Title" value="ExampleDownloadFilesAnt"/>
+				</section>
+			</manifest>
+			<zipfileset excludes="META-INF/*" src="ext/log4j-1.2.17.jar"/>
+		</jar>
+	</target>
+	
+	<target name="ExampleTestClientTorrent" depends="compile">
+		<echo message="----------------GENERATION DE JAR-----------------"/>
+		<jar basedir="${destination}" includes="**" destfile="${dist}/jbittorrent.jar">
+			<manifest>
+				<attribute name="Built-By" value="${user.name}"/>
+				<attribute name="Main-Class" value="test.ExampleTestClientTorrent"/>
+				<section name="common">
+					<attribute name="Specification-Title" value="ExampleTestClientTorrentAnt"/>
+					<attribute name="Specification-Version" value="1.0"/>
+					<attribute name="Implementation-Title" value="ExampleTestClientTorrentAnt"/>
+				</section>
+			</manifest>
+			<zipfileset excludes="META-INF/*" src="ext/log4j-1.2.17.jar"/>
+		</jar>
+	</target>
+	
+	
+	<target name="ExampleCreateTorrent" depends="compile">
+		<echo message="----------------GENERATION DE JAR-----------------"/>
+		<jar basedir="${destination}" includes="**" destfile="${dist}/jbittorrent.jar">
+			<manifest>
+				<attribute name="Built-By" value="${user.name}"/>
+				<attribute name="Main-Class" value="test.ExampleCreateTorrent"/>
+				<section name="common">
+					<attribute name="Specification-Title" value="ExampleCreateTorrentAnt"/>
+					<attribute name="Specification-Version" value="1.0"/>
+					<attribute name="Implementation-Title" value="ExampleCreateTorrentAnt"/>
+				</section>
+			</manifest>
+			<zipfileset excludes="META-INF/*" src="ext/log4j-1.2.17.jar"/>
+		</jar>
+	</target>
+		
+	
+	
+</project>
