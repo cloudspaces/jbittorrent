@@ -9,7 +9,7 @@ jbittorrent is a simple and easy to use Java implementation of the BitTorrent pr
 The project is based on the library Java BitTorrent API developed by Baptiste Dubuis, Artificial Intelligence Laboratory, EPFL.  Java BitTorrent API is a free software that can be redistributed or modified under the terms of the GNU General Public License as published by the Free Software Foundation. To get more information about the Java BitTorrent API: http://sourceforge.net/projects/bitext/
 
 
-jbittorrent improves and extends the previously described library with the following features: 
+** jbittorrent improves and extends the previously described library with the following features: **
 
 * Optimisation of the management mechanism that maintains the connections between the peers of the swarms. The new version of the library solves the multiple connection problem in the version 1.0 of the Java Bittorrent API. This problem was due to the fact that connections are identified by the IP and the port of the peer in question which might result in multiple connections for one peer. 
 
